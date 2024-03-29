@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class GraphicalBoard : MonoBehaviour
 {
 
     [SerializeField] GameObject[] pieces;
+    [SerializeField] Transform pieceParent;
 
     Board board = new Board();
 
@@ -32,46 +34,51 @@ public class GraphicalBoard : MonoBehaviour
 
         Quaternion rotation = pieces[0].transform.rotation;
 
+        PlacePieces(rank, file, pos, rotation);
+    }
+
+    private void PlacePieces(int rank, int file, Vector2 pos, Quaternion rotation)
+    {
         switch (board.squares[file + rank * 8])
         {
             case 0:
                 break;
             case Piece.king | Piece.white:
-                Instantiate(pieces[0], pos, rotation);
+                Instantiate(pieces[0], pos, rotation, pieceParent);
                 break;
             case Piece.pawn | Piece.white:
-                Instantiate(pieces[1], pos, rotation);
+                Instantiate(pieces[1], pos, rotation, pieceParent);
                 break;
             case Piece.knight | Piece.white:
-                Instantiate(pieces[2], pos, rotation);
+                Instantiate(pieces[2], pos, rotation, pieceParent);
                 break;
             case Piece.bishop | Piece.white:
-                Instantiate(pieces[3], pos, rotation);
+                Instantiate(pieces[3], pos, rotation, pieceParent);
                 break;
             case Piece.rook | Piece.white:
-                Instantiate(pieces[4], pos, rotation);
+                Instantiate(pieces[4], pos, rotation, pieceParent);
                 break;
             case Piece.queen | Piece.white:
-                Instantiate(pieces[5], pos, rotation);
+                Instantiate(pieces[5], pos, rotation, pieceParent);
                 break;
             // Black pieces
             case Piece.king | Piece.black:
-                Instantiate(pieces[6], pos, rotation);
+                Instantiate(pieces[6], pos, rotation, pieceParent);
                 break;
             case Piece.pawn | Piece.black:
-                Instantiate(pieces[7], pos, rotation);
+                Instantiate(pieces[7], pos, rotation, pieceParent);
                 break;
             case Piece.knight | Piece.black:
-                Instantiate(pieces[8], pos, rotation);
+                Instantiate(pieces[8], pos, rotation, pieceParent);
                 break;
             case Piece.bishop | Piece.black:
-                Instantiate(pieces[9], pos, rotation);
+                Instantiate(pieces[9], pos, rotation, pieceParent);
                 break;
             case Piece.rook | Piece.black:
-                Instantiate(pieces[10], pos, rotation);
+                Instantiate(pieces[10], pos, rotation, pieceParent);
                 break;
             case Piece.queen | Piece.black:
-                Instantiate(pieces[11], pos, rotation);
+                Instantiate(pieces[11], pos, rotation, pieceParent);
                 break;
         }
     }
