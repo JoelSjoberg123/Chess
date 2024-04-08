@@ -8,6 +8,8 @@ public class GraphicalBoard : MonoBehaviour
 
     [SerializeField] GameObject[] pieces;
     [SerializeField] Transform pieceParent;
+    [SerializeField] Vector2 testing;
+    [SerializeField] Move move = new Move(0, 1);
 
     Board board = new Board();
 
@@ -20,13 +22,22 @@ public class GraphicalBoard : MonoBehaviour
         {
             for(int file = 0; file < 8; file++)
             {
-                SpawnInPieces(rank, file);
+                SpawnInPiece(rank, file);
             }
         }
     }
 
-    private void SpawnInPieces(int rank, int file)
+    private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            MakeMove();
+        }
+    }
+
+    private void SpawnInPiece(int rank, int file)
+    {
+        //Finds where to place the pices
         float x = Mathf.Lerp(-3.5f, 3.5f, file / 7f);
         float y = Mathf.Lerp(3.5f, -3.5f, rank / 7f);
 
@@ -34,14 +45,17 @@ public class GraphicalBoard : MonoBehaviour
 
         Quaternion rotation = pieces[0].transform.rotation;
 
-        PlacePieces(rank, file, pos, rotation);
+        PlacePiece(rank, file, pos, rotation);
     }
 
-    private void PlacePieces(int rank, int file, Vector2 pos, Quaternion rotation)
+    
+
+    private void PlacePiece(int rank, int file, Vector2 pos, Quaternion rotation)
     {
         switch (board.squares[file + rank * 8])
         {
             case 0:
+                
                 break;
             case Piece.king | Piece.white:
                 Instantiate(pieces[0], pos, rotation, pieceParent);
@@ -80,6 +94,26 @@ public class GraphicalBoard : MonoBehaviour
             case Piece.queen | Piece.black:
                 Instantiate(pieces[11], pos, rotation, pieceParent);
                 break;
+        }
+    }
+    
+    private void MakeMove()
+    {
+        move = new Move((byte)testing.x, (byte)testing.y);
+        board.MakeMove(move);
+        
+        for(int i = 0; i < pieceParent.childCount; i++)
+        {
+            Destroy(pieceParent.GetChild(i).gameObject);
+        }
+
+
+        for (int rank = 0; rank < 8; rank++)
+        {
+            for (int file = 0; file < 8; file++)
+            {
+                SpawnInPiece(rank, file);
+            }
         }
     }
 }

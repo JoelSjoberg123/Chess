@@ -9,18 +9,23 @@ public class Board
     public int[] squares;
 
     bool whiteToMove = true;
-    public bool WhiteToMove 
-    {
-        get { return whiteToMove;}
-    }
+    
     public Board()
     {
         squares = new int[64];
     }
+    
+    public bool WhiteToMove 
+    {
+        get { return whiteToMove;}
+    }
 
     public void MakeMove(Move move)
     {
-        
+        byte startSquare  = move.StartSquare();
+        byte targetSquare = move.TargetSquare();
+        squares[targetSquare] = squares[startSquare];
+        squares[startSquare] = Piece.none;
     }
 
     public void SetUpBoard(string fen = startFenString) 
