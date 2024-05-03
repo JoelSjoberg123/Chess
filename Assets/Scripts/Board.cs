@@ -19,20 +19,25 @@ public class Board
     {
         get { return whiteToMove;}
     }
-
+    public static int SquareIndexToRank(byte index)
+    {
+        return index / 8;
+    }
+    public static int SquareIndexToFile(byte index)
+    {
+        return index % 8;
+    }
     public void MakeMove(Move move)
     {
+        
         byte startSquare  = move.StartSquare();
         byte targetSquare = move.TargetSquare();
+        if (startSquare == targetSquare) return;
         squares[targetSquare] = squares[startSquare];
         squares[startSquare] = Piece.none;
     }
 
     public void SetUpBoard(string fen = startFenString) 
-    {
-        FenToIntArray(fen);
-    }
-    private void FenToIntArray(string fen = startFenString)
     {
         char[] fenChar = fen.ToCharArray();
         int index = 0;
@@ -96,7 +101,7 @@ public class Board
                 int num = Convert.ToInt32(fenChar[i].ToString());
                 index += num;
             }
-            if (fenChar[i] == 'w')
+            else if (fenChar[i] == 'w')
             {
                 whiteToMove = true;
             }

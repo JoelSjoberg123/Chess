@@ -9,7 +9,7 @@ public class GraphicalBoard : MonoBehaviour
     [SerializeField] GameObject[] pieces;
     [SerializeField] Transform pieceParent;
     [SerializeField] Vector2 testing;
-    [SerializeField] Move move = new Move(0, 1);
+    [SerializeField] Move moveTEST = new Move(0, 1);
 
     Board board = new Board();
 
@@ -31,7 +31,7 @@ public class GraphicalBoard : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            MakeMove();
+            TESTINGMakeMove();
         }
     }
 
@@ -97,12 +97,17 @@ public class GraphicalBoard : MonoBehaviour
         }
     }
     
-    private void MakeMove()
+    private void TESTINGMakeMove()
     {
-        move = new Move((byte)testing.x, (byte)testing.y);
+        moveTEST = new Move((byte)testing.x, (byte)testing.y);
+        MakeMove(moveTEST);
+    }
+
+    public void MakeMove(Move move)
+    {
         board.MakeMove(move);
-        
-        for(int i = 0; i < pieceParent.childCount; i++)
+
+        for (int i = 0; i < pieceParent.childCount; i++)
         {
             Destroy(pieceParent.GetChild(i).gameObject);
         }
