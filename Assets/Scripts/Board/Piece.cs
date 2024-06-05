@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-class Piece
+static class Piece
 {
     public const int none = 0b000;
     public const int king = 0b001;
@@ -22,6 +22,9 @@ class Piece
         return (piece & color) != 0;
     }
 
-    
+    public static bool IsPieceType(int piece, int pieceType)
+    {
+        return (piece & pieceType) == pieceType;
+    }
 }
 

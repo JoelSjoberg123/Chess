@@ -99,8 +99,15 @@ public class GraphicalBoard : MonoBehaviour
     
     private void TESTINGMakeMove()
     {
+        Move[] moves = LegalMovesGenerator.GenerateMoves(board);
+
+
+
         moveTEST = new Move((byte)testing.x, (byte)testing.y);
-        MakeMove(moveTEST);
+        
+        
+
+        
     }
 
     public void MakeMove(Move move)

@@ -8,16 +8,16 @@ public class Board
     
     public int[] squares;
 
-    bool whiteToMove = true;
+    int colorToMove = Piece.white;
     
     public Board()
     {
         squares = new int[64];
     }
     
-    public bool WhiteToMove 
+    public int ColorToMove
     {
-        get { return whiteToMove;}
+        get { return colorToMove; }
     }
     public static int SquareIndexToRank(byte index)
     {
@@ -103,11 +103,11 @@ public class Board
             }
             else if (fenChar[i] == 'w')
             {
-                whiteToMove = true;
+                colorToMove = Piece.white;
             }
             else if (fenChar[i] == 'b')
             {
-                whiteToMove = false;
+                colorToMove = Piece.black;
             }
         }
     }
