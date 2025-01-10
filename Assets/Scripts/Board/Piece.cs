@@ -24,7 +24,7 @@ static class Piece
 
     public static bool IsPieceType(int piece, int pieceType)
     {
-        return (piece & pieceType) == pieceType;
+        return (piece & 0b00111) == pieceType;
     }
 }
 

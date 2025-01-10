@@ -13,6 +13,11 @@ public class GraphicalBoard : MonoBehaviour
 
     Board board = new Board();
 
+    public Board Board
+    {
+        get{return board;}
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -99,7 +104,7 @@ public class GraphicalBoard : MonoBehaviour
     
     private void TESTINGMakeMove()
     {
-        Move[] moves = LegalMovesGenerator.GenerateMoves(board);
+        //Move[] moves = LegalMovesGenerator.GenerateMoves(board);
 
 
 
@@ -113,7 +118,10 @@ public class GraphicalBoard : MonoBehaviour
     public void MakeMove(Move move)
     {
         board.MakeMove(move);
-
+        string colorStr = (board.ColorToMove == Piece.white) ? "white" : "black";
+        
+        Debug.Log($"Color to move next:{colorStr}");
+        
         for (int i = 0; i < pieceParent.childCount; i++)
         {
             Destroy(pieceParent.GetChild(i).gameObject);

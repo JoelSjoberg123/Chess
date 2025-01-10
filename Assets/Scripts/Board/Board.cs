@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 public class Board
 {
     const string startFenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
@@ -19,11 +18,11 @@ public class Board
     {
         get { return colorToMove; }
     }
-    public static int SquareIndexToRank(byte index)
+    public static int SquareIndexToRank(int index)
     {
         return index / 8;
     }
-    public static int SquareIndexToFile(byte index)
+    public static int SquareIndexToFile(int index)
     {
         return index % 8;
     }
@@ -32,7 +31,11 @@ public class Board
         
         byte startSquare  = move.StartSquare();
         byte targetSquare = move.TargetSquare();
+        
         if (startSquare == targetSquare) return;
+        
+        colorToMove = (colorToMove == Piece.white)? Piece.black : Piece.white; 
+
         squares[targetSquare] = squares[startSquare];
         squares[startSquare] = Piece.none;
     }
@@ -110,5 +113,8 @@ public class Board
                 colorToMove = Piece.black;
             }
         }
+        string colorStr = (colorToMove == Piece.white) ? "white" : "black";
+
+        UnityEngine.Debug.Log($"Color to move next:{colorStr}");
     }
 }

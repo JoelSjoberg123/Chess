@@ -12,7 +12,7 @@ public struct Move
 		get {  return theMove; }
 	}
 
-	public Move(byte startSquare, byte targetSquare)
+	public Move(int startSquare, int targetSquare)
 	{
 		theMove = 0;
 		//0b 000000        000000         0000
