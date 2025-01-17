@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420031}
-  sqaureTarget: {fileID: 1915448507306386949, guid: 7f4aeb90a75463348885213e3bd71350, type: 3}
+  squareTarget: {fileID: 1915448507306386949, guid: 7f4aeb90a75463348885213e3bd71350, type: 3}
   targetsParent: {fileID: 1679573139}
 --- !u!1 &1245957429
 GameObject:

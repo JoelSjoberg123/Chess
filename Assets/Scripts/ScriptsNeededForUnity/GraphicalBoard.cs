@@ -32,14 +32,6 @@ public class GraphicalBoard : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TESTINGMakeMove();
-        }
-    }
-
     private void SpawnInPiece(int rank, int file)
     {
         //Finds where to place the pices
@@ -57,7 +49,7 @@ public class GraphicalBoard : MonoBehaviour
 
     private void PlacePiece(int rank, int file, Vector2 pos, Quaternion rotation)
     {
-        switch (board.squares[file + rank * 8])
+        switch (board.Squares[file + rank * 8])
         {
             case 0:
                 
@@ -101,22 +93,9 @@ public class GraphicalBoard : MonoBehaviour
                 break;
         }
     }
-    
-    private void TESTINGMakeMove()
-    {
-        //Move[] moves = LegalMovesGenerator.GenerateMoves(board);
-
-
-
-        moveTEST = new Move((byte)testing.x, (byte)testing.y);
-        
-        
-
-        
-    }
-
     public void MakeMove(Move move)
     {
+        
         board.MakeMove(move);
         string colorStr = (board.ColorToMove == Piece.white) ? "white" : "black";
         
@@ -135,5 +114,7 @@ public class GraphicalBoard : MonoBehaviour
                 SpawnInPiece(rank, file);
             }
         }
+
+
     }
 }

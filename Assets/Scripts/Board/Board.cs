@@ -5,7 +5,14 @@ public class Board
 {
     const string startFenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
     
-    public int[] squares;
+    private int[] squares;
+
+    private int enPeasentSquare;
+
+    public int EnPeasentSquare
+    {
+        get{ return enPeasentSquare;}
+    }
 
     int colorToMove = Piece.white;
     
@@ -14,6 +21,7 @@ public class Board
         squares = new int[64];
     }
     
+    public int[] Squares { get { return (int[])squares.Clone(); } }
     public int ColorToMove
     {
         get { return colorToMove; }
@@ -26,13 +34,32 @@ public class Board
     {
         return index % 8;
     }
+    /// <summary>
+    /// Plays a move on the board.
+    /// </summary>
+    /// <param name="move">The move that will be played.</param>
     public void MakeMove(Move move)
     {
         
-        byte startSquare  = move.StartSquare();
-        byte targetSquare = move.TargetSquare();
+        byte startSquare  = move.StartSquare;
+        byte targetSquare = move.TargetSquare;
         
-        if (startSquare == targetSquare) return;
+        if(targetSquare == enPeasentSquare && Piece.IsPieceType(squares[startSquare], Piece.pawn) && enPeasentSquare != 0)
+        {
+            //If the piece that was moved is white, then the black pawn is towards the white side,
+            //aka the side that gets bigger. If the piece that was moved is black, then the white 
+            //pawn is moving towards the black side, aka the side that gets smaller.
+            int squareWherePawnThatDoubleMovedIs = targetSquare + ((colorToMove == Piece.white) ? 8 : -8);
+            squares[squareWherePawnThatDoubleMovedIs] = Piece.none;
+        }
+
+        if(move.IsDoublePawnMove){
+            if(colorToMove == Piece.white)enPeasentSquare = targetSquare + 8;
+            else enPeasentSquare = targetSquare - 8;
+        }
+        else enPeasentSquare = 0;
+
+        if (startSquare == targetSquare) throw new ArgumentException("startSquare can not be equal to targetSquare.");
         
         colorToMove = (colorToMove == Piece.white)? Piece.black : Piece.white; 
 
