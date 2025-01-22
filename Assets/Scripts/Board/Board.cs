@@ -9,6 +9,28 @@ public class Board
 
     private int enPeasentSquare;
 
+    private bool blackFileZeroRookCanCastle  = true;
+    private bool blackFileSevenRookCanCastle = true;
+    private bool whiteFileZeroRookCanCastle  = true;
+    private bool whiteFileSevenRookCanCastle = true;
+
+    public bool BlackFileZeroRookCanCastle
+    {
+        get{return blackFileZeroRookCanCastle;}
+    }
+    public bool BlackFileSevenRookCanCastle
+    {
+        get { return blackFileSevenRookCanCastle; }
+    }
+    public bool WhiteFileZeroRookCanCastle
+    {
+        get { return whiteFileZeroRookCanCastle; }
+    }
+    public bool WhiteFileSevenRookCanCastle
+    {
+        get { return whiteFileSevenRookCanCastle; }
+    }
+
     public int EnPeasentSquare
     {
         get{ return enPeasentSquare;}
@@ -40,10 +62,12 @@ public class Board
     /// <param name="move">The move that will be played.</param>
     public void MakeMove(Move move)
     {
-        
-        byte startSquare  = move.StartSquare;
+
+        byte startSquare = move.StartSquare;
         byte targetSquare = move.TargetSquare;
-        
+
+        if(startSquare == targetSquare) throw new ArgumentException("startSquare can not be equal to targetSquare.");
+
         if(targetSquare == enPeasentSquare && Piece.IsPieceType(squares[startSquare], Piece.pawn) && enPeasentSquare != 0)
         {
             //If the piece that was moved is white, then the black pawn is towards the white side,
@@ -52,19 +76,95 @@ public class Board
             int squareWherePawnThatDoubleMovedIs = targetSquare + ((colorToMove == Piece.white) ? 8 : -8);
             squares[squareWherePawnThatDoubleMovedIs] = Piece.none;
         }
+        if(blackFileZeroRookCanCastle || blackFileSevenRookCanCastle || whiteFileZeroRookCanCastle || whiteFileSevenRookCanCastle)
+            ChangeAllowedCastlingMoves(startSquare, targetSquare);
 
-        if(move.IsDoublePawnMove){
-            if(colorToMove == Piece.white)enPeasentSquare = targetSquare + 8;
+        if(move.IsCastlingMove == true)
+        {
+            //Is O-O-O
+            if(SquareIndexToFile(targetSquare) == 2)
+            {
+                int placeWhereRookIs = targetSquare - 2;
+                //targetSquare + 1 = where the rook moves during castling.
+                squares[targetSquare + 1] = squares[placeWhereRookIs];
+                squares[placeWhereRookIs] = Piece.none;
+            }//Is O-O SquareIndexToFile(targetSquare) = 6
+            else
+            {
+                int placeWhereRookIs = targetSquare + 1;
+                //targetSquare - 1 = where the rook moves during castling.
+                squares[targetSquare - 1] = squares[placeWhereRookIs];
+                squares[placeWhereRookIs] = Piece.none;
+            }
+        }
+
+        if(move.IsDoublePawnMove)
+        {
+            if(colorToMove == Piece.white) enPeasentSquare = targetSquare + 8;
             else enPeasentSquare = targetSquare - 8;
         }
         else enPeasentSquare = 0;
 
-        if (startSquare == targetSquare) throw new ArgumentException("startSquare can not be equal to targetSquare.");
-        
-        colorToMove = (colorToMove == Piece.white)? Piece.black : Piece.white; 
+
+
+
+        colorToMove = (colorToMove == Piece.white) ? Piece.black : Piece.white;
 
         squares[targetSquare] = squares[startSquare];
         squares[startSquare] = Piece.none;
+    }
+
+    private void ChangeAllowedCastlingMoves(byte startSquare, byte targetSquare)
+    {
+        if(Piece.IsPieceType(squares[startSquare], Piece.king))
+        {
+
+            if(Piece.IsColor(squares[startSquare], Piece.white))
+            {
+                whiteFileSevenRookCanCastle = false;
+                whiteFileZeroRookCanCastle = false;
+            }
+            else
+            {
+                blackFileSevenRookCanCastle = false;
+                blackFileZeroRookCanCastle = false;
+            }
+        }
+        else if(Piece.IsPieceType(squares[startSquare], Piece.rook))
+        {
+            if(startSquare == 0)
+            {
+                blackFileZeroRookCanCastle = false;
+            }
+            else if(startSquare == 7)
+            {
+                blackFileSevenRookCanCastle = false;
+            }
+            else if(startSquare == 56)
+            {
+                whiteFileZeroRookCanCastle = false;
+            }
+            else if(startSquare == 63)
+            {
+                whiteFileSevenRookCanCastle = false;
+            }
+        }
+        if(targetSquare == 0)
+        {
+            blackFileZeroRookCanCastle = false;
+        }
+        else if(targetSquare == 7)
+        {
+            blackFileSevenRookCanCastle = false;
+        }
+        else if(targetSquare == 56)
+        {
+            whiteFileZeroRookCanCastle = false;
+        }
+        else if(targetSquare == 63)
+        {
+            whiteFileSevenRookCanCastle = false;
+        }
     }
 
     public void SetUpBoard(string fen = startFenString) 

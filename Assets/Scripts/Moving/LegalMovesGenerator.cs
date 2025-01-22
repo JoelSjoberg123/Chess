@@ -27,23 +27,23 @@ public static class LegalMovesGenerator
             int piece = board.Squares[startSquare];
             //Debug.Log($"Color to move:{board.ColorToMove}  piececolor:{piece & 0b11000}  piece is color to move:{Piece.IsColor(piece, board.ColorToMove)}");
             if(piece == Piece.none || !Piece.IsColor(piece, board.ColorToMove)) continue;
-            else if(Piece.IsPieceType(piece, Piece.pawn  )) PawnMovement(board, startSquare, movingColor, oppositeColor);
+            else if(Piece.IsPieceType(piece, Piece.pawn)) PawnMovement(board, startSquare, movingColor, oppositeColor);
             else if(Piece.IsPieceType(piece, Piece.knight)) KnightMovement(board, startSquare, movingColor, oppositeColor);
             else if(Piece.IsPieceType(piece, Piece.bishop)) dirs = bishopMoveDirs;
-            else if(Piece.IsPieceType(piece, Piece.rook  )) dirs = rookMoveDirs;
-            else if(Piece.IsPieceType(piece, Piece.queen ) 
-                || Piece.IsPieceType(piece, Piece.king   )) dirs = queenMoveDirs;
+            else if(Piece.IsPieceType(piece, Piece.rook)) dirs = rookMoveDirs;
+            else if(Piece.IsPieceType(piece, Piece.queen)
+                || Piece.IsPieceType(piece, Piece.king)) dirs = queenMoveDirs;
 
             for(int direction = 0; direction < dirs.Length; direction++, targetSquare = startSquare)
             {
                 while(true)
                 {
-                    if (CanNotMoveFurther(targetSquare, allDirs[dirs[direction]])) break;
-                    
+                    if(CanNotMoveFurther(targetSquare, allDirs[dirs[direction]])) break;
+
                     targetSquare += allDirs[dirs[direction]];
-                    
+
                     if(!(targetSquare >= 0 && targetSquare <= 63)) break;
-                    
+
                     int pieceOnSquare = board.Squares[targetSquare];
 
                     if(Piece.IsColor(pieceOnSquare, board.ColorToMove)) break;
@@ -55,8 +55,63 @@ public static class LegalMovesGenerator
                     if(Piece.IsColor(pieceOnSquare, oppositeColor) && pieceOnSquare != 0) break;
                 }
             }
+
+            CastlingMoves(board, startSquare, piece);
         }
         return movesList.ToArray();
+    }
+
+    private static void CastlingMoves(Board board, int startSquare, int piece)
+    {
+        if(Piece.IsPieceType(piece, Piece.king))
+        {
+            if(board.ColorToMove == Piece.white)
+            {
+                if(board.WhiteFileZeroRookCanCastle)
+                {
+                    //To do:Check so king doesn't move through attacked square;
+
+                    //King is on square 60, so squares 59, 58 and 57 have to be empty to castle.
+                    if(board.Squares[59] == Piece.none && board.Squares[58] == Piece.none && board.Squares[57] == Piece.none)
+                    {
+                        //58 is 2 squares left of the king
+                        movesList.Add(new Move(startSquare, 58, isCastling: true));
+                    }
+                }
+                if(board.WhiteFileSevenRookCanCastle)
+                {
+                    ////King is on square 60, so squares 61 and 62 have to be empty to castle.
+                    if(board.Squares[61] == Piece.none && board.Squares[62] == Piece.none)
+                    {
+                        //62 is 2 squares right of the king
+                        movesList.Add(new Move(startSquare, 62, isCastling: true));
+                    }
+                }
+            }
+            else
+            {
+                if(board.BlackFileZeroRookCanCastle)
+                {
+                    //To do:Check so king doesn't move through attacked square;
+
+                    //King is on square 4, so squares 3, 2 and 1 have to be empty to castle.
+                    if(board.Squares[3] == Piece.none && board.Squares[2] == Piece.none && board.Squares[1] == Piece.none)
+                    {
+                        //2 is 2 squares left of the king
+                        movesList.Add(new Move(startSquare, 2, isCastling: true));
+                    }
+                }
+                if(board.BlackFileSevenRookCanCastle)
+                {
+                    ////King is on square 4, so squares 5 and 6 have to be empty to castle.
+                    if(board.Squares[5] == Piece.none && board.Squares[6] == Piece.none)
+                    {
+                        //62 is 2 squares right of the king
+                        movesList.Add(new Move(startSquare, 6, isCastling: true));
+                    }
+                }
+            }
+        }
     }
 
     private static void KnightMovement(Board board, int startSquare, int movingColor, int oppositeColor)

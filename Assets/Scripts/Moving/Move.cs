@@ -22,7 +22,7 @@ public struct Move
         return base.GetHashCode();
     }
 
-    public Move(int startSquare, int targetSquare, bool isDoublePawnMove = false)
+    public Move(int startSquare, int targetSquare, bool isDoublePawnMove = false, bool isCastling = false)
 	{
 		if(startSquare > 63 || targetSquare > 63)
 		{
@@ -34,9 +34,11 @@ public struct Move
                 $"startSquare was {startSquare}. targetSquare was {targetSquare}");
         }
 		theMove = 0;
-		//0b 000000        000000                  0                 000
-		//   start square  target square  is double pawn move        extra
-		theMove = (ushort)(startSquare << 10 | targetSquare << 4 | (isDoublePawnMove ? 1:0) << 3);
+		//0b 000000        000000                  0                 0              00
+		//   start square  target square  is double pawn move        is castling    extra
+		
+		theMove = (ushort)(startSquare << 10 | targetSquare << 4 |
+			              (isDoublePawnMove ? 1:0) << 3 | (isCastling ? 1 : 0) << 2);
 	}
 	public byte StartSquare
 	{
@@ -51,5 +53,9 @@ public struct Move
 	{
 		get {return ((theMove >> 3) & 0b0000000000001) == 1;}
 	}
+    public bool IsCastlingMove
+    {
+        get { return ((theMove >> 2) & 0b0000000000001) == 1; }
+    }
 
 }
